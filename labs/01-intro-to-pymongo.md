@@ -61,7 +61,7 @@ Now we can use our environment variables:
 >>> mdb_pass = os.environ['MONGODB_PASS']
 >>> mdb_host = os.environ['MONGODB_HOST']
 >>> mdb_port = os.environ['MONGODB_PORT']
->>> uri = 'mongodb://{user}:{pass}@{host}:{port}/'.format(user=mdb_user, pass=mdb_pass, host=mdb_host, port=mdb_port)
+>>> uri = 'mongodb://{user}:{passwd}@{host}:{port}/'.format(user=mdb_user, passwd=mdb_pass, host=mdb_host, port=mdb_port)
 >>> client = MongoClient(uri)
 >>> client.list_database_names()
 ['admin', 'config', 'local']
