@@ -18,24 +18,53 @@ $ nc -vz localhost 27017
 
 ### Making a Connection
 
-Making a connection without authentication:
+Making a connection without authentication (not our case):
 
 ```
 >>> from pymongo import MongoClient
 >>> uri = 'mongodb://mongodb.domain.com:27017/'
 >>> client = MongoClient(uri)
->>> client.database_names()
-[u'admin', u'local', u'mycargarage', u'random_api', u'shared_db', u'testdb']
+>>> client.list_database_names()
+['admin', 'config', 'local']
 ```
 
 Making a connection with authentication:
 
 ```
 >>> from pymongo import MongoClient
->>> uri = 'mongodb://username:password@mongodb.domain.com:27017/random_api?authSource=admin&authMechanism=SCRAM-SHA-1'
+>>> uri = 'mongodb://root:bekkerlabs@localhost:27017/'
 >>> client = MongoClient(uri)
->>> client.database_names()
-[u'admin', u'local', u'mycargarage', u'random_api', u'shared_db', u'testdb']
+>>> client.list_database_names()
+['admin', 'config', 'local']
+```
+
+We can also use environment variables, to test if we have the values in our environment:
+
+```
+>>> import os
+
+>>> os.environ['MONGODB_HOST']
+'localhost'
+>>> os.environ['MONGODB_USER']
+'root'
+>>> os.environ['MONGODB_PASS']
+'bekkerlabs'
+>>> os.environ['MONGODB_PORT']
+'27017'
+```
+
+Now we can use our environment variables:
+
+```
+>>> import os
+>>> mdb_user = os.environ['MONGODB_USER']
+>>> mdb_pass = os.environ['MONGODB_PASS']
+>>> mdb_host = os.environ['MONGODB_HOST']
+>>> mdb_port = os.environ['MONGODB_PORT']
+>>> uri = 'mongodb://{user}:{pass}@{host}:{port}/'.format(user=mdb_user, pass=mdb_pass, host=mdb_host, port=mdb_port)
+>>> client = MongoClient(uri)
+>>> client.list_database_names()
+['admin', 'config', 'local']
 ```
 
 ### Listing Databases
@@ -43,8 +72,8 @@ Making a connection with authentication:
 
 ```
 >>> client = MongoClient(uri)
->>> client.database_names()
-[u'admin', u'local', u'mycargarage', u'random_api', u'shared_db', u'testdb']
+>>> client.list_database_names()
+['admin', 'config', 'local']
 ```
 
 ### Listing Collections
@@ -52,8 +81,8 @@ Making a connection with authentication:
 ```
 >>> client = MongoClient(uri)
 >>> db = client.shared_db
->>> db.collection_names()
-[u'flask_reminders', u'test', u'usersessions', u'messages']
+>>> db.list_collection_names()
+[]
 ```
 
 ### Write One Document 
